@@ -2,7 +2,8 @@ import flask
 import time
 from flask import Flask, request, jsonify, render_template, Response, redirect, url_for
 import json
-
+##
+import mysql.connector
 
 app = flask.Flask(__name__)
 
@@ -14,22 +15,45 @@ def index():
 
 @app.route("/post-requests", methods=['GET', 'POST'])
 def post_request(comments=[]):
-    #if request.method == "GET":
-    #    return render_template("post_requests.html", comments=comments)
-    #data = request.get_json()
-    #comments.append(data)
-    #return redirect(url_for('post-requests')
+##
 
-    print(request.is_json)
+    mydb = mysql.connector.connect(host="ix-dev.cs.uoregon.edu", user="eugenet", passwd="password", database="my_db", port="3226")
+    mycursor = mydb.cursor()
+
+    #add_data = ("INSERT INTO locationdata "
+    #           "(id, data) "
+    #           "VALUES (%s, %s)")
+
+    add_data = ("INSERT INTO locationdata2 "
+               "(id, user_id, longitude, latitude, speed, timestamp) "
+               "VALUES (%s, %s, %s, %s, %s, %s)")
+
+
+##
     data = request.get_json()
     comments.append(data)
-    print(comments)
+    #comments.append(mydb.is_connected())
+    if (data != None):
+        userid = data['User ID']
+        longitude = data['Longitude']
+        latitude = data['Latitude']
+        speed = data['Speed']
+        date = data['Date']
+
+        #mysqldata = ('0', str(data))
+        mysqldata = ('0', userid, longitude, latitude, speed, date)
+
+
+        mycursor.execute(add_data, mysqldata)
+        mydb.commit()
 
     if request.method == "GET":
         return render_template("index.html", comments=comments)
+    ##
+
+    ##
     return 'Valid JSON request received!'
-    #return jsonify(data)
-    #return render_template('post_requests.html', post=data)
+
 
 
 
