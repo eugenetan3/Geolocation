@@ -9,7 +9,7 @@ Created: 4/18/2020
 Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 
 How to install:
-    -installation requires the use of the mysql-connector-python package. Enter the following text into the terminal which you are using:      $pip3 install mysql-connector-python. 
+    -installation requires the use of the mysql-connector-python package. Enter the following text into the terminal which you are            using: $pip3 install mysql-connector-python. 
         --if this pip installation fails try and use: $pip install mysql-connector-python for Python 2.X
     -should either method of installation fail, double check the current installation of pip and try the installation process again
     
