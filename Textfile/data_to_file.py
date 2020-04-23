@@ -19,8 +19,9 @@ with open("data_output.txt", 'w') as df:
         time = line[5][11:]
         latitude = line[3]
         longitude = line[2]
+        time_at_location = line[6]
 
-        df.write("%s\t%s\t%s\t%s\t%s\n"
-                 % (userid, date, time, latitude, longitude))
-
+        df.write("%s\t%s\t%s\t%s\t%s\t%s\n"
+                 % (userid, date, time, latitude, longitude, time_at_location))
+    
 connection.close()
