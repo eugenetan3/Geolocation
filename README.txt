@@ -1,4 +1,5 @@
 # Geolocation
+--------------------------------------------------------------------------------------------------------------------------------
 
 Project Description: Our system utilizes geospatial data to collect data on users' movements during the COVID-19 pandemic. It allows user locations to be reported accurately to a hosted web server which then delivers the user's data into a secure MySQL Database. Storage within the database allows for manipulation of user data and examination of an user geospatial information.
 
