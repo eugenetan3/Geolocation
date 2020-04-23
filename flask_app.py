@@ -25,8 +25,8 @@ def post_request(comments=[]):
     #           "VALUES (%s, %s)")
 
     add_data = ("INSERT INTO locationdata2 "
-               "(id, user_id, longitude, latitude, speed, timestamp) "
-               "VALUES (%s, %s, %s, %s, %s, %s)")
+               "(id, user_id, longitude, latitude, speed, timestamp, time_spent) "
+               "VALUES (%s, %s, %s, %s, %s, %s, %s)")
 
 
 ##
@@ -39,9 +39,10 @@ def post_request(comments=[]):
         latitude = data['Latitude']
         speed = data['Speed']
         date = data['Date']
+        time_spent = data['Time Spent']
 
         #mysqldata = ('0', str(data))
-        mysqldata = ('0', userid, longitude, latitude, speed, date)
+        mysqldata = ('0', userid, longitude, latitude, speed, date, time_spent)
 
 
         mycursor.execute(add_data, mysqldata)
