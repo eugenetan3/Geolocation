@@ -39,8 +39,7 @@ data_array = sorted(data_array, key = lambda x: x[0])
 with open("data_output.csv","w") as csvfile:
     csvwriter = csv.writer(csvfile)
     for row in data_array:
-        userid, date, time, latitude, longitude, time_at_location = row
-        csvwriter.writerow([userid, date, time, latitude, longitude, time_at_location])
+        csvwriter.writerow(row)
     
 
     
