@@ -13,8 +13,11 @@ sql_statement = "SELECT * FROM locationdata2"
 my_database.execute(sql_statement)
 output = my_database.fetchall()
 
-with open("data_output.txt", 'w') as tabdfile, open("data_output.csv","w") as csvfile:
-    csvwriter = csv.writer(csvfile)
+#data from output fixed into desired format and order
+data_array = [None] * len(output)
+
+with open("data_output.txt", 'w') as tabdfile:
+    i = 0
     for line in output:
         userid = line[1]
         date = line[5].replace("-","/")[0:10]
@@ -22,12 +25,24 @@ with open("data_output.txt", 'w') as tabdfile, open("data_output.csv","w") as cs
         latitude = line[3]
         longitude = line[2]
         time_at_location = line[6]
-
-
-        tabdfile.write("%s\t%s\t%s\t%s\t%s\t%s\n"
-                 % (userid, date, time, latitude, longitude, time_at_location))
-        csvwriter.writerow([str(userid), str(date), str(time), str(latitude), str(longitude),
-                            str(time_at_location)])
         
+        data_array[i] = [userid, date, time, latitude, longitude, time_at_location]
+        i += 1
+        
+        tabdfile.write("%s\t%s\t%s\t%s\t%s\t%s\n"
+         % (userid, date, time, latitude, longitude, time_at_location))
+
+    
+data_array = sorted(data_array, key = lambda x: x[0])
+
+
+with open("data_output.csv","w") as csvfile:
+    csvwriter = csv.writer(csvfile)
+    for row in data_array:
+        userid, date, time, latitude, longitude, time_at_location = row
+        csvwriter.writerow([userid, date, time, latitude, longitude, time_at_location])
+    
+
+    
 
 connection.close()
