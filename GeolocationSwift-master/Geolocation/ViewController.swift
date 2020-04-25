@@ -1,4 +1,4 @@
-    //
+//
 //  ViewController.swift
 //  Geolocation
 //
@@ -9,22 +9,18 @@
 import UIKit
 import CoreLocation
 
-
-//####
-    
+//Global struct used to hold previous CLLocation Object
 struct prevLocation {
     var latitude: Double = 0.00
     var longitude: Double = 0.00
     var time: Int = 0
     var CLItem : CLLocation = CLLocation(latitude: 0.00, longitude: 0.00)
-    //var start: CFAbsoluteTime! = CFAbsoluteTimeGetCurrent()
-    //var timecounter = NSDate()
 }
 var clock = prevLocation()
 
-//####
+
 //Find a starting point time, check if it is 5 minutes past that start time,
-//if it is 5 minutes past that start time, assign that 5 min past time to a var inside struct
+//if it is 5 minutes past that start time, assign that 5 mintime to a var inside struct
 //then update timespent accordingly.
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
@@ -35,12 +31,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        //##ADDED CODE HERE
-        
+        //Request user for location access even in the background
         locationManager.requestAlwaysAuthorization()
         
+        //Check user status
         let status = CLLocationManager.authorizationStatus()
         
+        //Evaluate which case, until user has provided access to always allowing location tracking
         switch status {
             case .authorizedAlways:
                 locationManager.startUpdatingLocation()
@@ -54,77 +51,62 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
         }
         
-        //#####END ADDED CODE
-        
-        
-        //locationManager.requestAlwaysAuthorization() this line can be uncommented
-        // let deviceID = UIDevice.current.identifierForVendor?.uuidString
-        //locationManager.requestWhenInUseAuthorization()
-        
+        //Check if the user has enabled location services, if true we assign accuracy and begin updating
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.startUpdatingLocation()
-            locationManager.allowsBackgroundLocationUpdates = true
+            locationManager.allowsBackgroundLocationUpdates = true //Allows app to run in background due to build capability
         }
     }
     
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        //
         
+        //Get the first location within locations
         if let location = locations.first {
-            //###
-            let maxTime:TimeInterval = 60*5;
             
+            let maxTime:TimeInterval = 60*5; //Temporal Sampling Interval of 5 minutes
+            
+            //Check to see if it has been 5 minutes since the last item has been updated (CL.item within clock struct)
             let locationIsValid:Bool = Date().timeIntervalSince(clock.CLItem.timestamp) >= maxTime
-            print(locationIsValid)
-            if locationIsValid {
+            // Debug statement: print(locationIsValid)
+            if locationIsValid { //5 minutes has passed so we continue and parse and send a new location to web server
                 
-            clock.CLItem = location
-            //###
-            //print(location.coordinate)
-            //print(location.speed)
-            //##
-            //let elapsed = CFAbsoluteTimeGetCurrent() - clock.start
-            //print(elapsed)
-            
-            //if (elapsed >= 300) {
-            //##
-            //    clock.start = CFAbsoluteTimeGetCurrent()
-            //####added code
-            if (clock.latitude == 0.00 && clock.longitude == 0.00) {
-                clock.time = 0
-                clock.latitude = location.coordinate.latitude
-                clock.longitude = location.coordinate.longitude
-                clock.CLItem = location
+            clock.CLItem = location //Update location within the struct so it becomes the "previous" location
+          
+            if (clock.latitude == 0.00 && clock.longitude == 0.00) { //If a location has not been encountered before we assign defaults to struct
+                clock.time = 0 //Time spent in one location
+                clock.latitude = location.coordinate.latitude //Assign lat
+                clock.longitude = location.coordinate.longitude //Assign long
+                clock.CLItem = location //Assign CLLocation object
             } else {
-                let meters = location.distance(from: clock.CLItem)
-                if (meters >= 30.48) {
+                let meters = location.distance(from: clock.CLItem) //Check how far away from previous location the current location is
+                if (meters >= 30.48) { //If location is >100ft away from previous location, reset timespent (movement)
                     clock.time = 0
                 } else {
-                    clock.time += 5
+                    clock.time += 5 //Increment time spent if location within 100ft from previous location
                 }
-                clock.CLItem = location
+                clock.CLItem = location //Assign location update
             }
             
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MM-dd-yyyy HH:mm:ss"
-            let dateInFormat = dateFormatter.string(from: Date())
-            let deviceID = UIDevice.current.identifierForVendor!.uuidString
+            let dateInFormat = dateFormatter.string(from: Date()) //Format time stamp so that it follows dateFormatter (MM-dd-yyyy HH:mm:ss)
+            let deviceID = UIDevice.current.identifierForVendor!.uuidString //Get a unique user id that is assigned to a user's device upon installation
             
             
-            //Changed the second : to string from double and added dateInFormat for string
+            //JSON package format (dictionary)
             let parameters: [String : String] = ["User ID": deviceID, "Date": dateInFormat, "Longitude": String(location.coordinate.longitude), "Latitude": String(location.coordinate.latitude), "Speed": String(location.speed), "Time Spent": String(clock.time)]
-            //added time
-  
+            
+            //URL to send the parameters JSON to the web server where the data is sent to
             let url = URL(string: "https://eugenet.pythonanywhere.com/post-requests")!
             
             let session = URLSession.shared
             
             var request = URLRequest(url: url)
-            request.httpMethod = "POST"
+            request.httpMethod = "POST" //https POST request
             
             do {
                 request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -133,8 +115,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             }
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
+            //JSON serialization to make JSON from parameters 
             
-  
             let task = session.dataTask(with: request, completionHandler: { data, response, error in
 
                 guard error == nil else {
@@ -161,24 +143,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             task.resume()
             }
         }
-            //}
+   
         }
     
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if (status == CLAuthorizationStatus.denied) {
-            showLocationDisabledPopUp()
+        if (status == CLAuthorizationStatus.denied) { 
+            showLocationDisabledPopUp() //Popup 
         }
-        //###ADDED CODE HERE
+   
         if (status == CLAuthorizationStatus.authorizedWhenInUse) {
-            showLocationDisabledPopUp()
+            showLocationDisabledPopUp() //Popup
         }
         if (status == CLAuthorizationStatus.notDetermined) {
-            showLocationDisabledPopUp()
+            showLocationDisabledPopUp() //Popup
         }
-        //###END ADDED CODE
+ 
     }
     
+    //UI controller which gives phone prompt alert
     func showLocationDisabledPopUp() {
         let alertController = UIAlertController(title: "Background Location Access Not Set to Always", message: "In order to find coordinates we need location.", preferredStyle: .alert)
         
