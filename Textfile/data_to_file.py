@@ -16,7 +16,7 @@ output = my_database.fetchall()
 #data from output fixed into desired format and order
 data_array = [None] * len(output)
 
-with open("data_output.txt", 'w') as tabdfile:
+with open("output.txt", 'w') as tabdfile:
     i = 0
     for line in output:
         userid = line[1]
@@ -25,7 +25,7 @@ with open("data_output.txt", 'w') as tabdfile:
         latitude = line[3]
         longitude = line[2]
         time_at_location = line[6]
-        
+            
         data_array[i] = [userid, date, time, latitude, longitude, time_at_location]
         i += 1
         
@@ -36,7 +36,7 @@ with open("data_output.txt", 'w') as tabdfile:
 data_array = sorted(data_array, key = lambda x: x[0])
 
 
-with open("data_output.csv","w") as csvfile:
+with open("output.csv","w") as csvfile:
     csvwriter = csv.writer(csvfile)
     for row in data_array:
         csvwriter.writerow(row)
