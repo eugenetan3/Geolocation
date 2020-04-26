@@ -74,21 +74,5 @@ def post_request(comments=[]):
     ##
     return 'Valid JSON request received!'
 
-
-
-
-@app.route("/json-post-requests", methods=['GET','POST'])
-def json_request():
-    req_data = request.get_json(force=True)
-    longitude = req_data['longitude']
-    latitude = req_data['latitude']
-    direction = req_data['direction']
-    speed = req_data['speed']
-    return '''
-            Longitude: {}
-            Latitude: {}
-            Direction: {}
-            Speed: {}'''.format(longitude, latitude, direction, speed)
-
 if __name__ == '__main__':
     app.run(debug=True)
