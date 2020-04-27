@@ -17,6 +17,7 @@ Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 import mysql.connector
 import csv
 
+print("Begin to down load the data and transform to .csv...")
 #establish a connection to the ix-dev MySQL database
 connection = mysql.connector.connect(
     user='eugenet', password='password',
@@ -33,7 +34,7 @@ sql_statement = "SELECT * FROM locationdata2"
 my_database.execute(sql_statement)
 output = my_database.fetchall()
 
-print(type(output))
+#print(type(output))
 #data from output fixed into desired format and order
 data_array = [None] * len(output)
 
@@ -72,3 +73,4 @@ with open("output.csv","w") as csvfile:
     
 
 connection.close()
+print("done.")
