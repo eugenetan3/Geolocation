@@ -34,7 +34,6 @@ sql_statement = "SELECT * FROM locationdata2"
 my_database.execute(sql_statement)
 output = my_database.fetchall()
 
-#print(type(output))
 #data from output fixed into desired format and order
 data_array = [None] * len(output)
 
