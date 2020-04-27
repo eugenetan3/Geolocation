@@ -5,7 +5,7 @@ import csv
 try:
     #connect to the mysql database
     connection = mysql.connector.connect(
-        user='eugenettt', password='password',
+        user='eugenet', password='password',
         host='ix-dev.cs.uoregon.edu', database='my_db',
         port = "3226"
     )
