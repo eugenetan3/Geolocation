@@ -11,6 +11,7 @@ Created: 4/18/2020
 
 Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 --------------------------------------------------------------------------------------------------------------------------------
+REQUIRED:
 How to install python packages:
     -installation requires the use of the Flask python package. Enter the following text into the terminal which you are using: $pip3   install Flask
         --if this pip installation fails try and use: $pip install Flask for Python 2.X
@@ -22,6 +23,8 @@ How to run the data output code:
     -To run the data outputting code, navigate inside the Geolocation Project Folder and enter the following into the terminal:                $python3 data_to_file.py
         --if this does not execute successfuly, try and enter the following: $python data_to_file.py
 --------------------------------------------------------------------------------------------------------------------------------
+!!!The below instruction is on if you would like to replicate the project yourself by building each component as your own!!!
+
 How to host webserver:
 To install and host the Flask server, you must first download the zip file containing Geolocation. Within the zip file contains two files: flask_app.py and index.html. To successfully create a host for the iOS device to interface with you must host the flask application.
 
@@ -40,7 +43,6 @@ Upon successful account creation the following steps are:
     10-Within viewcontroller.swift, change line 104’s URL to ‘https://<username>.pythonanywhere.com/post_request’.
     11-Recompile the iOS app to reflect the change to POST destination.
     12-App is now successfully directing requests to this website.
---------------------------------------------------------------------------------------------------------------------------------
     
 How to create mysql database:
     -In order to create the MySQL database on ix-dev servers, you must have an account registered within the ix-dev servers, if you do not have an account you can create one at https://systems.cs.uoregon.edu/wiki/index.php.
@@ -65,7 +67,17 @@ Upon successful creation and approval of an ix-dev account, the following steps 
     17-The contents sent through the flask server will now be sent and entered into the MySQL database.
     18-Repeat steps 14 except within the data_to_file.py file within the directory it is downloaded by editing with a text editor.
     19-Be aware that if you shut the server down by using “$ mysqlctl stop” when you start again it may be listening on a different port number (which requires you to change the port).
+--------------------------------------------------------------------------------------------------------------------------------
 
+!!!This is the instruction on how to execute the code as it currently exists (with existing Flask Server and MySQL Database)!!!
+
+The following are the steps to downloading aggregated data from the MySQL database to the local directory:
+    0-The pip installation of mysql-connector-python has already been completed is a requisite, if it hasn't been installed yet refer to the pip installations above.
+    1-Navigate to the directory where the downloaded Geolocation exists. Navigate to the directory containing file “date_to_file.py.” 
+    2-To run the data output software, execute the command “python3 date_to_file.py”
+    3-Ensure that a valid internet connection exists during execution of this command so the python software can connect to the remote database. 
+    4-Upon executing successfully, within the same directory as the file “date_to_file.py” should exist output.csv and output.txt
+    5-The two output files, output.txt exists as a tab delimited text file containing the raw aggregated data collected within the database. Output.csv is sorted by user and time representation of the data. Both files contain no data smoothing.
 
         
 Software Dependencies:
