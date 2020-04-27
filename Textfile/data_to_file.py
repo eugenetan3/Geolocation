@@ -10,12 +10,6 @@ try:
         port = "3226"
     )
 
-# if there is an error, print out the error message
-except mysql.connector.Error as err:
-    print("Error: {}".format(err))
-
-# otherwise
-else:
     my_database = connection.cursor()
     #sql format to receive all data from desired table
     sql_statement = "SELECT * FROM locationdata2"
@@ -24,6 +18,15 @@ else:
     output = my_database.fetchall()
     #close the connection
     connection.close()
+    
+# print an error if it is unable to get data from MySQL database
+except mysql.connector.Error as err:
+    print("Error: {}".format(err))
+
+
+# otherwise
+else:
+
 
     #data from output fixed into desired format and order
     data_array = [None] * len(output)
@@ -57,7 +60,7 @@ else:
         for row in data_array:
             csvwriter.writerow(row)
         
-    connection.close()
+
         
 
 
