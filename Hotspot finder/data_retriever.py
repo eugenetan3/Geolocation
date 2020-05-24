@@ -1,7 +1,7 @@
 import mysql.connector
 import sshtunnel
 import csv
-import json
+
 
 # check if there is any connection error
 sshtunnel.SSH_TIMEOUT = 5.0
@@ -29,25 +29,27 @@ with sshtunnel.SSHTunnelForwarder(
     output = my_database.fetchall()
     #close the connection
     connection.close()
-
+'''
     for line in output:
         print(line)
-        print()
+        print()'''
     #create the tab delimited text file
-    with open("output.txt", 'w') as tabdfile:
-        i = 0
-        for line in output:
-            point = json.loads(line[1])
-            latitude = point["Latitude"]
-            longitude = point["Longitude"]
-            time_at_location = point["Time Spent"]
-            #add the data to the data array to be sorted
-            #data_array[i] = [latitude,longitude,time_at_location]
-            i += 1
+with open("output.txt", 'w') as tabdfile:
+    i = 0
+    for line in output:
+        point = eval(line[1])
+        longitude = point['Longitude']
+        latitude = point['Latitude']
 
-            #write to the text file
-            tabdfile.write("%s\t%s\t%s\n"
-             % (latitude,longitude,time_at_location))
+        time_at_location = point['Time Spent']
+        #add the data to the data array to be sorted
+        #data_array[i] = [latitude,longitude,time_at_location]
+        i += 1
+
+        #once db is populated, use if time_at_location == 0:
+        #write to the text file
+        tabdfile.write("%s\t%s\t%s\n"
+         % (longitude,latitude,time_at_location))
 
 connection.close()
 
