@@ -21,6 +21,10 @@ Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 """
 
 import folium
+import mysql.connector
+import sshtunnel
+import csv
+
 
 # Settings
 range_square = 0.0000001    # The radius of the cluster
@@ -107,13 +111,45 @@ def mark(centroid_list: list) -> map:
 
 
 def main():
-    print("loading file...", end='')
-    f = open("output.txt", 'r')
+    print("Interacting with database...", end='')      
+
+    # check if there is any connection error
+    sshtunnel.SSH_TIMEOUT = 5.0
+    sshtunnel.TUNNEL_TIMEOUT = 5.0
+    #connect to the mysql database
+    with sshtunnel.SSHTunnelForwarder(
+        ('ssh.pythonanywhere.com'),
+        ssh_username = 'eugenet',
+        ssh_password = 'Group3422',
+        remote_bind_address=('eugenet.mysql.pythonanywhere-services.com', 3306)
+    ) as tunnel:
+        connection = mysql.connector.connect(
+            host='127.0.0.1', user='eugenet',
+            password='Swimming1337', database='eugenet$comments',
+            port = tunnel.local_bind_port
+        )
+        my_database = connection.cursor()
+        #sql format to receive all data from desired table
+        sql_statement = "SELECT * FROM comments"
+        my_database.execute(sql_statement)
+        #put the data into a list of strings
+        output = my_database.fetchall()
+        #close the connection
+        connection.close()
+        
     location_list = []
-    for line in f:
-        inf = line.strip().split()
-        loc = (float(inf[0]), float(inf[1]))
-        location_list.append(loc)
+    for line in output:
+        point = eval(line[1])
+        longitude = point['Longitude']
+        latitude = point['Latitude']
+
+        time_at_location = point['Time Spent']
+        #add the data to the data array to be sorted
+
+
+        #once db is populated, use if time_at_location == 0:
+        #write to the text file
+        location_list.append((float(latitude),float(longitude)))
     print("done")
     print("calculating cluster... ", end='')
     centroid_list = cluster(location_list)
@@ -122,7 +158,6 @@ def main():
     m = mark(centroid_list)
     m.save('map.html')
     print("done")
-    f.close()
     return
 
 
