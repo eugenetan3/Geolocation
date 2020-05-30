@@ -23,8 +23,6 @@ Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 import folium
 import mysql.connector
 import sshtunnel
-import csv
-
 
 # Settings
 range_square = 0.0000001    # The radius of the cluster
@@ -111,6 +109,7 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
             color = 'orange'
         else:
             color = 'red'
+            
         folium.Circle(
             location=(a_centroid[0], a_centroid[1]),
             radius= proportion * factor,
@@ -119,10 +118,6 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
             fill_color=color
         ).add_to(m)
 
-
-
-
-        
         folium.Marker(
             location=(a_centroid[0], a_centroid[1]),
             popup=f"population: {a_centroid[2]}",    # information on the icon
@@ -131,7 +126,7 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
     return m
 
 
-def main():
+def main(user_time):
     print("Interacting with database...", end='')      
 
     # check if there is any connection error
@@ -157,13 +152,15 @@ def main():
         output = my_database.fetchall()
         #close the connection
         connection.close()
-        
+
     location_list = []
     for line in output:
         point = eval(line[1])
         longitude = point['Longitude']
         latitude = point['Latitude']
-        location_list.append((float(latitude),float(longitude)))
+        data_time = point['Date'][11:13]
+        if data_time == user_time.split("-")[0]:
+            location_list.append((float(latitude),float(longitude)))
         
     print("done")
     print("calculating cluster... ", end='')
@@ -176,6 +173,3 @@ def main():
     print("done")
     return
 
-
-if __name__ == "__main__":
-    main()
