@@ -28,7 +28,7 @@ import csv
 
 # Settings
 range_square = 0.0000001    # The radius of the cluster
-factor = 0.5                # size of red circle = factor * #population
+factor = 50                 # size of red circle = factor * #population
 start_zoom = 15             # initial zoom of viewpoint
 
 
@@ -101,16 +101,8 @@ def find_largest_hotspot(centroid_list: list) -> int:
 def mark(centroid_list: list, largest_hotspot: int) -> map:
     m = folium.Map(location=[45.35327764580474, -122.85393959924241], zoom_start=start_zoom)
     for a_centroid in centroid_list:
-        folium.Circle(
-            location=(a_centroid[0], a_centroid[1]),
-            radius=a_centroid[2] * factor,
-            color='#DC143C',
-            fill=True,
-            fill_color='#D23D29'
-        ).add_to(m)
 
         proportion = a_centroid[2]/largest_hotspot
-
         if proportion < .25:
             color = 'green'
         elif proportion < .5:
@@ -119,6 +111,17 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
             color = 'orange'
         else:
             color = 'red'
+        folium.Circle(
+            location=(a_centroid[0], a_centroid[1]),
+            radius= proportion * factor,
+            color=color,
+            fill=True,
+            fill_color=color
+        ).add_to(m)
+
+
+
+
         
         folium.Marker(
             location=(a_centroid[0], a_centroid[1]),
