@@ -160,14 +160,8 @@ def main():
         point = eval(line[1])
         longitude = point['Longitude']
         latitude = point['Latitude']
-
-        time_at_location = point['Time Spent']
-        #add the data to the data array to be sorted
-
-
-        #once db is populated, use if time_at_location == 0:
-        #write to the text file
         location_list.append((float(latitude),float(longitude)))
+        
     print("done")
     print("calculating cluster... ", end='')
     centroid_list = cluster(location_list)
