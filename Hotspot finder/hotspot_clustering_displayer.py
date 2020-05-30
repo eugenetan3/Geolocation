@@ -90,8 +90,15 @@ def cluster(location_list: list) -> list:
     # print("centroid_list:", new_centroid_list)
     return new_centroid_list
 
+def find_largest_hotspot(centroid_list: list) -> int:
+    largest_hotspot = 0
+    for a_centroid in centroid_list:
+        if a_centroid[2] > largest_hotspot:
+            largest_hotspot = a_centroid[2]
+    return largest_hotspot
+        
 
-def mark(centroid_list: list) -> map:
+def mark(centroid_list: list, largest_hotspot: int) -> map:
     m = folium.Map(location=[45.35327764580474, -122.85393959924241], zoom_start=start_zoom)
     for a_centroid in centroid_list:
         folium.Circle(
@@ -102,10 +109,21 @@ def mark(centroid_list: list) -> map:
             fill_color='#D23D29'
         ).add_to(m)
 
+        proportion = a_centroid[2]/largest_hotspot
+
+        if proportion < .25:
+            color = 'green'
+        elif proportion < .5:
+            color = 'yellow'
+        elif proportion < .75:
+            color = 'orange'
+        else:
+            color = 'red'
+        
         folium.Marker(
             location=(a_centroid[0], a_centroid[1]),
             popup=f"population: {a_centroid[2]}",    # information on the icon
-            icon=folium.Icon(color='red', icon='info-sign')
+            icon=folium.Icon(color = color, icon='info-sign')
         ).add_to(m)
     return m
 
@@ -153,9 +171,10 @@ def main():
     print("done")
     print("calculating cluster... ", end='')
     centroid_list = cluster(location_list)
+    largest_hotspot = find_largest_hotspot(centroid_list)
     print("done")
     print("visualizing on map... ", end='')
-    m = mark(centroid_list)
+    m = mark(centroid_list,largest_hotspot)
     m.save('map.html')
     print("done")
     return
