@@ -120,20 +120,21 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
     return m
 
 def make_map(user_time):
-    mydb = mysql.connector.connect(host="eugenet.mysql.pythonanywhere-services.com", user="eugenet", passwd="Swimming1337", database="eugenet$comments", port="3306")
-    # = mysql.connector.connect(host="ix-dev.cs.uoregon.edu", user="eugenet", passwd="password", database="my_db", port="3226")
+
+    mydb = mysql.connector.connect(host="eugenet.mysql.pythonanywhere-services.com", user="eugenet", passwd="Swimming1337", database="eugenet$default", port="3306")
     my_database = mydb.cursor()
-    sql_statement = "SELECT * FROM comments"
+
+    sql_statement = "SELECT * FROM locationdata2"
     my_database.execute(sql_statement)
     output = my_database.fetchall()
     mydb.close()
 
     location_list = []
     for line in output:
-        point = eval(line[1])
-        longitude = point['Longitude']
-        latitude = point['Latitude']
-        data_time = point['Date'][11:13]
+        latitude = line[3]
+        longitude = line[2]
+        data_time = line[5][11:13]
+
         if data_time == user_time.split("-")[0]:
             location_list.append((float(latitude),float(longitude)))
     if len(location_list) == 0:
@@ -160,13 +161,12 @@ def index():
 @app.route("/post-requests", methods=['GET', 'POST'])
 def post_request(comments=[]):
 
-    mydb = mysql.connector.connect(host="eugenet.mysql.pythonanywhere-services.com", user="eugenet", passwd="Swimming1337", database="eugenet$comments", port="3306")
+    mydb = mysql.connector.connect(host="eugenet.mysql.pythonanywhere-services.com", user="eugenet", passwd="Swimming1337", database="eugenet$default", port="3306")
     mycursor = mydb.cursor()
 
-    add_data = ("INSERT INTO comments "
-               "(id, content) "
-               "VALUES (%s, %s)")
-
+    add_data = ("INSERT INTO locationdata2 "
+               "(id, user_id, longitude, latitude, speed, timestamp, time_spent) "
+               "VALUES (%s, %s, %s, %s, %s, %s, %s)")
     data = request.get_json()
     comments.append(data)
 
@@ -177,7 +177,8 @@ def post_request(comments=[]):
         speed = data['Speed']
         date = data['Date']
         time_spent = data['Time Spent']
-        mysqldata = ('0', str(data))
+        #mysqldata = ('0', str(data))
+        mysqldata = ('0', userid, longitude, latitude, speed, date, time_spent)
         mycursor.execute(add_data, mysqldata)
         mydb.commit()
 
@@ -194,5 +195,7 @@ def menuselect():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
 
