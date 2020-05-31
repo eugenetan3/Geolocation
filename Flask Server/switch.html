@@ -1,0 +1,13 @@
+
+<form action="/switch" method="post">
+    <div align="center" id="mainselection">
+      <select name="site">
+        <option selected>Select a time period</option>
+        {% for site in sites %}
+        <option value="{{site}}">{{site}}</option>
+        {% endfor %}
+      </select>
+      <p>The times specified are in military time. 01-02 indicates 1am to 2am, 12-13 indicates 12pm to 1pm, etc. Therefore select your time based on this criteria to see the map visualized by the hour.</p>
+    </div>
+    <button class="button execute" name="submit" value="submit">Submit</button>
+  </form>
