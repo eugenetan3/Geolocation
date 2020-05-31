@@ -97,8 +97,8 @@ def find_largest_hotspot(centroid_list: list) -> int:
         
 
 def mark(centroid_list: list, largest_hotspot: int) -> map:
-        m = folium.Map(location=[44.3188462041, -120.932963], zoom_start=7)
-        for a_centroid in centroid_list:
+    m = folium.Map(location=[44.3188462041, -120.932963], zoom_start=7)
+    for a_centroid in centroid_list:
 
         proportion = a_centroid[2]/largest_hotspot
         if proportion < .25:
@@ -112,7 +112,7 @@ def mark(centroid_list: list, largest_hotspot: int) -> map:
             
         folium.Circle(
             location=(a_centroid[0], a_centroid[1]),
-            radius= proportion * factor,
+            radius= factor^(proportion*2),
             color=color,
             fill=True,
             fill_color=color
