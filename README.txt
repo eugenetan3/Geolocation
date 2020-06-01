@@ -1,13 +1,13 @@
-# Geolocation
+# Geolocation Visualization
 --------------------------------------------------------------------------------------------------------------------------------
 
-Project Description: Our system utilizes geospatial data to collect data on users' movements during the COVID-19 pandemic. It allows user locations to be reported accurately to a hosted web server which then delivers the user's data into a secure MySQL Database. Storage within the database allows for manipulation of user data and examination of an user geospatial information.
+Project Description: Our system utilizes geospatial data to collect data on users' movements during the COVID-19 pandemic. It allows user locations to be reported accurately to a hosted web server which then delivers the user's data into a secure MySQL Database. Storage within the database allows for manipulation of user data and examination of an user geospatial information. This Geospatial Data is then visualized in the form of a map for user consumption via web browser.
 
 Authors: Eugene Tan, Ellie Yun, Gaoyuan Chen, Jackson Klagge, Matthew Struble
 
 Group: 2020 Spring CIS422 Group 3
 
-Created: 4/18/2020
+Created: 5/18/2020
 
 Course: CIS 422 - Software Methodology Project 2 under Professor Anthony Hornof
 --------------------------------------------------------------------------------------------------------------------------------
