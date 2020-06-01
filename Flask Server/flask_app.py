@@ -22,7 +22,7 @@ import mysql.connector
 
 
 range_square = 0.0000001    # The radius of the cluster
-factor = 0.5                # size of red circle = factor * #population
+factor = 1000                # size of red circle = factor * #population
 start_zoom = 15             # initial zoom of viewpoint
 
 def centroid(cluster_list: list) -> list:
