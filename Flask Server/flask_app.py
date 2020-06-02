@@ -3,6 +3,9 @@ Description: This is the hosted python flask web application which is the primar
 the visualization module by reading from stored data within the database and then applied
 to cluster and visualize it.
 
+Source for clustering algorithm:
+Bradley N. Miller and David L. Ranum. 2013. Python Programming In Context (2nd. ed.). Jones and Bartlett Publishers, Inc., USA.(ch.7)
+
 Authors: Eugene Tan, Ellie Yun, Gaoyuan Chen, Jackson Klagge, Matthew Struble
 
 Group: 2020 Spring CIS422 Group 3
