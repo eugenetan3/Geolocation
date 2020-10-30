@@ -188,7 +188,7 @@ def make_map(user_time):
     :return: Void
     """
     # connect to the MySQL database on PythonAnywhere
-    mydb = mysql.connector.connect(host="eugenet.mysql.pythonanywhere-services.com", user="eugenet", passwd="Swimming1337", database="eugenet$default", port="3306")
+    mydb = mysql.connector.connect(host="hst", user=:"xd", passwd="xd", database="xd", port="xd")
     my_database = mydb.cursor()
 
     # take all data from the desired table
